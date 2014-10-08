@@ -1,0 +1,10 @@
+#-*- mode: conf -*-
+Django==1.7
+psycopg2
+djangorestframework
+django-filter
+markdown
+django-simple-history
+cleanerversion
+django-permission
+python-dateutil
