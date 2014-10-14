@@ -99,9 +99,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    
+    # CORS Support
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'
@@ -122,35 +127,101 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    
+    # CORS Support
+    'corsheaders',
+    
+    # Rest Easy
     'rest_easy',
-    'example',
     'rest_framework',
     'permission',
+    
+    # Token
+    'rest_framework.authtoken',
+    
+    # OAuth
+    'oauth_provider',
+    
+    # OAuth 2
+    'provider',
+    'provider.oauth2',
+    
+    # Example
+    'example',
     'simple_history',
+    
     #'versions' # Cleaner Version
 )
 
+# CORS Support - https://github.com/ottoyiu/django-cors-headers/
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = () # Example ('google.com',)
+CORS_ORIGIN_REGEX_WHITELIST = () # Example ('^(https?://)?(\w+\.)?google\.com$', )
+CORS_URLS_REGEX = r'^/api/.*$' # Default : '^.*$'
+CORS_ALLOW_METHODS = ('GET','POST','PUT','PATCH','DELETE','OPTIONS')
+CORS_ALLOW_HEADERS = (
+        'x-requested-with',
+        'content-type',
+        'accept',
+        'origin',
+        'authorization',
+        'x-csrftoken'
+)
+CORS_EXPOSE_HEADERS = ()
+CORS_EXPOSE_HEADERS = ()
+CORS_ALLOW_CREDENTIALS = False # Disallows cookies
+CORS_PREFLIGHT_MAX_AGE = 86400
+
 REST_BASE_URL = 'http://localhost:8080/api/'
 
-# REST_EASY !!! NOTE : 
+# REST_EASY Specific Settings
 
 # Tuple of apps to be scaffolded by rest_easy
 REST_EASY_APPS = ('example',)  
 
 # 
-REST_EASY_APPS_PERMISSIONS = {'':'',}
+REST_EASY_APPS_PERMISSIONS = {'example':'775',}
 
 # Define model names to ignore, this is usefeul for ignoring models that get auto-generated
 REST_EASY_IGNORE_MODELS = (r'Historical*',)
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'permission.backends.PermissionBackend',
+    'oauth_provider.backends.XAuthAuthenticationBackend', # django-oauth-plus
+    'rest_framework.authentication.OAuth2Authentication', # django-oauth2-provider
+    'django.contrib.auth.backends.ModelBackend',          # django-rest-framework
+    'permission.backends.PermissionBackend',              # django-permissions
 )
 
 REST_FRAMEWORK = {
+    
+    # !!! TODO : We need to allow these global defaults to be changed via environment os variables
+    
+    # Renderer
+    #'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer','rest_framework.renderers.BrowsableAPIRenderer',),
+    
+    # Filters
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+
+    # Authentication
+    # - Default authentication (Will also need 'rest_framework.authtoken' for this
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication', # !!! NOTE: Not suitable for production in a clustered environment (stateful)
+        'rest_framework.authentication.TokenAuthentication', # !!! NOTE: Must force HTTPS for this
+        #'oauth2_provider.ext.rest_framework.OAuth2Authentication', # OAuth 2.0
+        
+    ),
+    
+    # Global Authorization
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.DjangoObjectPermissions',),
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+    #'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    
+    # Throttling
+    'DEFAULT_THROTTLE_CLASSES': ('rest_framework.throttling.AnonRateThrottle','rest_framework.throttling.UserRateThrottle','rest_framework.throttling.ScopedRateThrottle',),
+    'DEFAULT_THROTTLE_RATES': {'anon': '100/day','user': '1000/day'} # !!! NOTE : These is dictionary will need to be appended with view_name : rate values, in addition
+                                                                     # the the anon, user defaults
+    
 }
 
 # Author Permission Defaults
@@ -176,7 +247,8 @@ PERMISSION_DEFAULT_SPL_ANY_PERMISSION = False
 PERMISSION_DEFAULT_SPL_ADD_PERMISSION = False
 PERMISSION_DEFAULT_SPL_CHANGE_PERMISSION = False
 PERMISSION_DEFAULT_SPL_DELETE_PERMISSION = False
-# END REST_EASY
+
+# END REST_EASY Settings
 
 # settings.py
 LOGGING = {

@@ -1,10 +1,21 @@
 #-*- mode: conf -*-
 Django==1.7
-psycopg2
+psycopg2  
+
+# Rest Easy
 djangorestframework
-django-filter
-markdown
-django-simple-history
-cleanerversion
 django-permission
 python-dateutil
+django-rest-framework-oauth # Bundle of the below Packages
+django-oauth-plus
+django-oauth2-provider
+
+django-filter # Allows filtering
+markdown # Used for API browsing
+
+# CORS
+django-cors-headers
+
+# Simple History
+django-simple-history
+
