@@ -1,0 +1,5 @@
+/.vagrant/
+/.ropeproject/
+*.pyc
+*.log
+demo_project/demo_project/static/
