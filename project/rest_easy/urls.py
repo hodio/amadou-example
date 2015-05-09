@@ -6,8 +6,8 @@ from rest_framework.throttling import UserRateThrottle
 import re
 
 # Permissions
-import permission
-permission.autodiscover()
+#import permission
+#permission.autodiscover()
 from django.conf            import settings
 from django.db.models       import get_models, get_app
 
@@ -16,7 +16,7 @@ from resources import modelResources
 # !!! DEBUG
 import logging
 logger = logging.getLogger(__name__)
-# !!! NED DEBUG
+# !!! END DEBUG
 
 # User Serialization
 class UserSerializer(serializers.HyperlinkedModelSerializer):

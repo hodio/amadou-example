@@ -135,6 +135,12 @@ INSTALLED_APPS = (
     'rest_easy',
     'rest_framework',
     'permission',
+
+    # Rest Permissions
+    'rest_permissions',
+
+    # Amadou
+    'amadou',
     
     # Token
     'rest_framework.authtoken',
@@ -247,6 +253,9 @@ PERMISSION_DEFAULT_SPL_ANY_PERMISSION = False
 PERMISSION_DEFAULT_SPL_ADD_PERMISSION = False
 PERMISSION_DEFAULT_SPL_CHANGE_PERMISSION = False
 PERMISSION_DEFAULT_SPL_DELETE_PERMISSION = False
+
+# Octal Permission Defaults
+settings.PERMISSION_DEFAULT_OCTAL_PERMISSION = 777
 
 # END REST_EASY Settings
 

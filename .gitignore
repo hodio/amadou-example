@@ -2,4 +2,7 @@
 /.ropeproject/
 *.pyc
 *.log
+.DS_Store
+.pydevproject
+.project
 demo_project/demo_project/static/

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User,Group
-from rest_easy.models import RestEasy
+from rest_permissions.models import RestPermissions
 from django.conf import settings
 
 # Date Utils
@@ -14,7 +14,7 @@ from simple_history.models import HistoricalRecords
 This is the base class, it extends the Amadou model with the intent of adding model revision. 
 It also returns a default unicode definition of object.name or object.pk
 '''
-class Base(RestEasy):
+class Base(RestPermissions):
      
     class Meta:
         abstract = True

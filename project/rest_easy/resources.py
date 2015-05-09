@@ -26,7 +26,7 @@ def modelResources():
             # Assemble Properties into a dictionary
             model_properties = {}
             for attribute in dir(app_model):
-                # Ignore hidden attributes and te primary key
+                # Ignore hidden attributes and the primary key
                 if attribute[0:1] != '_' and attribute != 'pk':
                     try:
                         attribute_value = getattr(app_model,attribute)
